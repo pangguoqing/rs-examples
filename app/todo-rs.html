@@ -51,17 +51,17 @@
     <% } %>
 </script>
 
-<script src="rs/rs.js"></script>
+<script src="../rs/rs.js"></script>
 <script>
 
-  // Set configuration
   rsjs.config({
     base: "../sea-modules/",
     alias: {
       "$": "jquery/jquery/1.10.1/jquery.js",
       "underscore": "gallery/underscore/1.4.4/underscore.js",
       "backbone": "gallery/backbone/1.0.0/backbone.js"
-    }
+    },
+    preferFlash: false
   });
 
   rsjs.main("../static/todo/dest/main");

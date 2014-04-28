@@ -9,8 +9,8 @@ module.exports = function(grunt) {
 		rs.concat = rs.concat ||{"to":"index.js", "from":["**/*.js","**/*.json","**/*.text"]};
 		return rs;
 	}
-	function getSrcAsync(rs, needMark, filter){
-		var async = [];
+	function getSrcExcept(rs, needMark, filter){
+		var except = [];
 		var filter = filter||function(){return true};
 		for(var i=0,len=rs.concat.length;i<len;i++){
 			var concat = rs.concat[i];
@@ -19,12 +19,12 @@ module.exports = function(grunt) {
 				for(var j=0;j<from.length;j++){
 					var file = from[j];
 					if(file[0]==="!" && filter(file)){
-						async.push(needMark?file:file.substr(1));
+						except.push(needMark?file:file.substr(1));
 					}
 				}
 			}
 		}
-		return async;
+		return except;
 	}
 	var path = require("path");
 	var rs = getConfig();
@@ -71,7 +71,7 @@ module.exports = function(grunt) {
 				dest: 'tmp/copy',
 				filter: rs.filter
 			},
-			other_async_to_dest: {
+			other_except_to_dest: {
 				expand: true,
 				cwd: 'tmp/copy',
 				src: otherSrc,
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
 					return path.substr(-4)===".css";
 				}
 			},
-			css_async_to_dest : {
+			css_except_to_dest : {
 				expand : true,
 				cwd : 'tmp/copy/',
 				src : ["**/*.css"].concat(concatFrom.map(function(file) {return (file[0]==="!")?file.substr(1):("!"+file); })),
@@ -100,7 +100,7 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		rsjs-transcoding : {
+		rsjs_transcoding : {
 			other_to_rs: {
 				options : {
 					idPer : idPer
@@ -139,7 +139,7 @@ module.exports = function(grunt) {
 					}
 				}]
 			},
-			js_async_to_rsJsAsync : {
+			js_except_to_rsJsExcept : {
 				options : {
 					isASelfDefineModule : true
 				},
@@ -147,21 +147,7 @@ module.exports = function(grunt) {
 					expand : true,
 					src : ["**/*.js"].concat(concatFrom.map(function(file) {return (file[0]==="!")?file.substr(1):("!"+file); })),
 					cwd : 'tmp/copy/',
-					dest : 'tmp/rsJsAsync/',
-					filter : function(path){
-						return path.substr(-3)===".js";
-					}
-				}]
-			},
-			js_async_to_dest : {
-				options : {
-					isASelfDefineModule : true
-				},
-				files : [ {
-					expand : true,
-					src : ["**/*.js"].concat(concatFrom.map(function(file) {return (file[0]==="!")?file.substr(1):("!"+file); })),
-					cwd : 'tmp/copy/',
-					dest : 'dest/',
+					dest : 'tmp/rsJsExcept/',
 					filter : function(path){
 						return path.substr(-3)===".js";
 					}
@@ -169,14 +155,14 @@ module.exports = function(grunt) {
 			}
 		},
 		uglify : {
-			js_async_to_dest : {
+			js_except_to_dest : {
 				options : {
 				// beautify: true
 				},
 				files : [ {
 					expand : true,
 					src : '**/*.js',
-					cwd : 'tmp/rsJsAsync/',
+					cwd : 'tmp/rsJsExcept/',
 					dest : 'dest/'
 				} ]
 			},
@@ -215,7 +201,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-rsjs-transcoding');
 
-	grunt.registerTask('product', [ 'clean', 'copy:all', 'copy:other_async_to_dest' ,'rsjs-transcoding:other_to_rs' , 'cssmin:css_to_cssmin', 'cssmin:css_async_to_dest', 'rsjs-transcoding:css_to_rs','rsjs-transcoding:js_to_rs','rsjs-transcoding:js_async_to_rsJsAsync','uglify:js_async_to_dest','concat:product', 'uglify:concat_to_dest', 'clean:tmp']);
-	grunt.registerTask('debug', [ 'clean', 'copy:all', 'copy:other_async_to_dest' ,'rsjs-transcoding:other_to_rs' , 'cssmin:css_to_cssmin', 'cssmin:css_async_to_dest', 'rsjs-transcoding:css_to_rs','rsjs-transcoding:js_to_rs','rsjs-transcoding:js_async_to_dest','concat:debug','clean:tmp']);
+	grunt.registerTask('product', [ 'clean', 'copy:all', 'copy:other_except_to_dest' ,'rsjs_transcoding:other_to_rs' , 'cssmin:css_to_cssmin', 'cssmin:css_except_to_dest', 'rsjs_transcoding:css_to_rs','rsjs_transcoding:js_to_rs','rsjs_transcoding:js_except_to_rsJsExcept','uglify:js_except_to_dest','concat:product', 'uglify:concat_to_dest','clean:tmp']);
+	grunt.registerTask('debug', [ 'clean', 'copy:all', 'copy:other_async_to_dest' ,'rsjs_transcoding:other_to_rs' , 'cssmin:css_to_cssmin', 'cssmin:css_async_to_dest', 'rsjs_transcoding:css_to_rs','rsjs_transcoding:js_to_rs','rsjs_transcoding:js_async_to_dest','concat:debug','clean:tmp']);
 	grunt.registerTask('default', 'product');
 };
