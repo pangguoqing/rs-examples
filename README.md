@@ -1,25 +1,15 @@
 # Examples for Sea.js
 
-<http://seajs.github.io/examples>
+<http://pangguoqing.github.io/rs-examples/index.html>
 
 
 How to Build
 ------------
 
-First, you should install `spm` and `spm-build`:
-
-```
-$ npm install spm -g
-$ npm install spm-build -g
-```
-
-Then, build it:
-
 ```
 $ cd static/hello
-$ make build
-$ make deploy
+$ npm install
+$ grunt
 ```
 
-Visit <http://docs.spmjs.org/> for detail information.
 
