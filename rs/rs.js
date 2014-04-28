@@ -785,10 +785,22 @@ var loader = function(options) {
 		return;
 	}
 	var xhr = loader.needCORS?loader.createCORSRequest(url):loader.createRequest(url);
-	xhr.onerror = onerror;
-	xhr.onload = function() {
-		onsuccess(xhr.responseText);
-	};
+	if(loader.needCORS){
+		xhr.onerror = onerror;
+		xhr.onload = function() {
+			onsuccess(xhr.responseText);
+		};	
+	}else{
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState === 4){
+				if(xhr.status === 200){
+					onsuccess(xhr.responseText);
+				}else{
+					onerror(xhr.statusText);
+				}
+			}
+		};
+	}
 	xhr.send();
 };
 loader.needCORS = false;
