@@ -6,20 +6,10 @@
 How to Build
 ------------
 
-First, you should install `spm` and `spm-build`:
-
-```
-$ npm install spm -g
-$ npm install spm-build -g
-```
-
-Then, build it:
-
 ```
 $ cd static/hello
-$ make build
-$ make deploy
+$ npm install
+$ grunt
 ```
 
-Visit <http://docs.spmjs.org/> for detail information.
 
