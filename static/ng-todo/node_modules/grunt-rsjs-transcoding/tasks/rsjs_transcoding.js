@@ -62,7 +62,7 @@ module.exports = function(grunt) {
 													function(filepath) {
 														var extname = path.extname(filepath);
 														var code = grunt.file.read(filepath);
-														var id = filepath.replace("tmp/copy/","").replace("tmp/min/","");
+														var id = filepath.replace("tmp/copy/","").replace("tmp/min/","").replace("tmp/cssmin/","");
 														id = options.idPer + id;
 														if (options.isASelfDefineModule) {
 															id = id.replace(/(.*\/)/,"./");
