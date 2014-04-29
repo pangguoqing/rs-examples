@@ -13,6 +13,6 @@
 	"rs" : {
 		"cwd": "src/",
 		"src": ["**"],
-		"concat": {"to":"main.js", "from":["**/*.js","**/*.json","**/*.text"]}
+		"concat": {"to":"main.js", "from":["**/*.js","**/*.json","**/*.text","**/*.css"]}
 	}
 }
